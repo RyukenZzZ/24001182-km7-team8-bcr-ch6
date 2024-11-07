@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model cars {
+  id             BigInt        @id @default(autoincrement())
+  plate          String?       @db.VarChar(255)
+  manufacture_id BigInt?
+  model_id       BigInt?
+  image          String?
+  rentPerDay     Int?
+  capacity       Int?
+  description    String?
+  availableAt    DateTime?     @db.Date
+  transmission   String?       @db.VarChar(255)
+  available      Boolean?
+  type_id        BigInt?
+  year           Int?
+  options        String[]
+  specs          String[]
+  manufactures   manufactures? @relation(fields: [manufacture_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  models         models?       @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  types          types?        @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model manufactures {
+  id     BigInt   @id @default(autoincrement())
+  name   String?  @db.VarChar(255)
+  logo   String?
+  cars   cars[]
+  models models[]
+}
+
+model models {
+  id             BigInt        @id @default(autoincrement())
+  name           String?       @db.VarChar(255)
+  description    String?
+  manufacture_id BigInt?
+  cars           cars[]
+  manufactures   manufactures? @relation(fields: [manufacture_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model types {
+  id             BigInt  @id @default(autoincrement())
+  name           String? @db.VarChar(255)
+  description    String?
+  characteristic String?
+  style          String? @db.VarChar(255)
+  cars           cars[]
+}
+
+model users {
+  id              BigInt  @id(map: "users_pk") @unique(map: "users_id_idx") @default(autoincrement())
+  name            String  @db.VarChar
+  email           String  @unique(map: "users_email_idx") @db.VarChar
+  password        String  @db.VarChar
+  profile_picture String? @db.VarChar
+  role_id         Int     @default(2)
+}
