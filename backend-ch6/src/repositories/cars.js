@@ -34,6 +34,7 @@ exports.getCarsById = async (id) => {
     where: {
       id: id,
     },
+    include: { manufactures: true, models: true, types: true },
   });
   return JSONBigInt.parse(JSONBigInt.stringify(carsById));
 };
@@ -42,11 +43,14 @@ exports.addCars = async (data) => {
   const { manufacture_id, model_id, type_id } = data;
 
   // Check if related IDs exist
-  const manufacture = await prisma.manufactures.findUnique({ where: { id: manufacture_id } });
+  const manufacture = await prisma.manufactures.findUnique({
+    where: { id: manufacture_id },
+  });
   const model = await prisma.models.findUnique({ where: { id: model_id } });
   const type = await prisma.types.findUnique({ where: { id: type_id } });
 
-  if (!manufacture) throw new NotFoundError(`Manufacture with ID ${manufacture_id} not found`);
+  if (!manufacture)
+    throw new NotFoundError(`Manufacture with ID ${manufacture_id} not found`);
   if (!model) throw new NotFoundError(`Model with ID ${model_id} not found`);
   if (!type) throw new NotFoundError(`Type with ID ${type_id} not found`);
 
@@ -60,11 +64,14 @@ exports.updateCars = async (id, data) => {
   const { manufacture_id, model_id, type_id } = data;
 
   // Check if related IDs exist
-  const manufacture = await prisma.manufactures.findUnique({ where: { id: manufacture_id } });
+  const manufacture = await prisma.manufactures.findUnique({
+    where: { id: manufacture_id },
+  });
   const model = await prisma.models.findUnique({ where: { id: model_id } });
   const type = await prisma.types.findUnique({ where: { id: type_id } });
 
-  if (!manufacture) throw new NotFoundError(`Manufacture with ID ${manufacture_id} not found`);
+  if (!manufacture)
+    throw new NotFoundError(`Manufacture with ID ${manufacture_id} not found`);
   if (!model) throw new NotFoundError(`Model with ID ${model_id} not found`);
   if (!type) throw new NotFoundError(`Type with ID ${type_id} not found`);
 
