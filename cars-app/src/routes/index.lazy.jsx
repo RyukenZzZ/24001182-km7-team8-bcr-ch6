@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { getCars } from "../service/car";
 import { getModels } from "../service/model";
 import { getManufactures } from "../service/manufacture";
+import CarItem from "../components/Car/carsItem";
 import ModelItem from "../components/Model/ModelItem";
 import ManufactureItem from "../components/Manufacture/manufacturesItem";
 
@@ -15,6 +17,7 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   const { token } = useSelector((state) => state.auth);
 
+  const [cars, setCars] = useState([]);
   const [manufactures, setManufactures] = useState([]);
   const [models, setModels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,21 +32,35 @@ function Index() {
       setError(null);
 
       try {
-        const [modelResult, manufactureResult] = await Promise.all([getModels(), getManufactures()]);
+ 
+        const [carResult, modelResult, manufactureResult] = await Promise.all([
+          getCars(), 
+          getModels(),
+          getManufactures(),
+        ]);
 
+        // Handle cars
+        if (carResult.success) {
+          setCars(carResult.data);
+        } else {
+          setError(prev => prev || carResult.message || "Failed to fetch cars");
+        }
+        
+        // Handle models
         if (modelResult.success) {
           setModels(modelResult.data);
         } else {
-          setError(modelResult.message || "Failed to fetch models");
+          setError(prev => prev || modelResult.message || "Failed to fetch models");
         }
 
+        // Handle manufactures
         if (manufactureResult.success) {
           setManufactures(manufactureResult.data);
         } else {
-          setError(manufactureResult.message || "Failed to fetch manufactures");
+          setError(prev => prev || manufactureResult.message || "Failed to fetch manufactures");
         }
       } catch (err) {
-        setError(err);
+        setError(err.message || "An error occurred while fetching data");
       } finally {
         setIsLoading(false);
       }
@@ -70,73 +87,88 @@ function Index() {
     );
   }
 
- return (
-  <Row className="mt-4">
-    {error ? (
-      <Col>
-        <h1 className="text-danger">{error}</h1>
-      </Col>
-    ) : (
-      <Col>
-        <h1 className="text-primary">Data Selection</h1>
-        <div className="mb-4">
-          <button 
-            className="btn btn-outline-primary me-2" 
-            onClick={() => setSelectedData("models")}
-          >
-            Show Models
-          </button>
-          <button 
-            className="btn btn-outline-secondary" 
-            onClick={() => setSelectedData("manufactures")}
-          >
-            Show Manufactures
-          </button>
-        </div>
-
-        {selectedData === "models" && (
-          <div>
-            <h2>Models</h2>
-            {models.length > 0 ? (
-              <Row>
-                {models.map((model) => (
-                  <Col key={model.id} md={4} className="mb-4">
-                    <div>
-                      <div>
-                        <ModelItem model={model} />
-                      </div>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-            ) : (
-              <h2>No models found</h2>
-            )}
+  return (
+    <Row className="mt-4">
+      {error ? (
+        <Col>
+          <h1 className="text-danger">{error}</h1>
+        </Col>
+      ) : (
+        <Col>
+          <h1 className="text-primary">Data Selection</h1>
+          <div className="mb-4">
+            <button 
+              className="btn btn-outline-success ms-2" 
+              onClick={() => setSelectedData("cars")}
+            >
+              Show Cars
+            </button>
+            <button 
+              className="btn btn-outline-secondary ms-2" 
+              onClick={() => setSelectedData("models")}
+            >
+              Show Models
+            </button>
+            <button 
+              className="btn btn-outline-secondary ms-2" 
+              onClick={() => setSelectedData("manufactures")}
+            >
+              Show Manufactures
+            </button>
           </div>
-        )}
 
-        {selectedData === "manufactures" && (
-          <div>
-            <h2>Manufactures</h2>
-            {manufactures.length > 0 ? (
-              <Row>
-                {manufactures.map((manufacture) => (
-                  <Col key={manufacture.id} md={4} className="mb-4">
-                    <div>
-                      <div>
-                        <ManufactureItem manufacture={manufacture} />
-                      </div>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-            ) : (
-              <h2>No manufactures found</h2>
-            )}
-          </div>
-        )}
-      </Col>
-    )}
-  </Row>
-);
+          {selectedData === "cars" && (
+            <div>
+              <h2>Cars</h2>
+              {cars.length > 0 ? (
+                <Row>
+                  {cars.map((car) => (
+                    <Col key={car.id} md={4} className="mb-4">
+                      <CarItem car={car } />
+                    </Col>
+                  ))}
+                </Row>
+              ) : (
+                <h2>No cars found</h2>
+              )}
+            </div>
+          )}
+          
+          {selectedData === "models" && (
+            <div>
+              <h2>Models</h2>
+              {models.length > 0 ? (
+                <Row>
+                  {models.map((model) => (
+                    <Col key={model.id} md={4} className="mb-4">
+                      <ModelItem model={model} />
+                    </Col>
+                  ))}
+                </Row>
+              ) : (
+                <h2>No models found</h2>
+              )}
+            </div>
+          )}
+
+          {selectedData === "manufactures" && (
+            <div>
+              <h2>Manufactures</h2>
+              {manufactures.length > 0 ? (
+                <Row>
+                  {manufactures.map((manufacture) => (
+                    <Col key={manufacture.id} md={4} className="mb-4">
+                      <ManufactureItem manufacture={manufacture} />
+                    </Col>
+                  ))}
+                </Row>
+              ) : (
+                <h2>No manufactures found</h2>
+              )}
+            </div>
+          )}
+        </Col>
+      )}
+    </Row>
+  );
 }
