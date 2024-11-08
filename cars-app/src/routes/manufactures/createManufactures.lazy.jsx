@@ -8,7 +8,8 @@ import Button from 'react-bootstrap/Button'
 import Image from 'react-bootstrap/Image'
 import { createManufacture } from '../../service/manufacture'
 import { toast } from 'react-toastify'
-import Protected from '../../components/Auth/protected'
+import Protected from '../../components/Auth/Protected'
+
 
 export const Route = createLazyFileRoute('/manufactures/createManufactures')({
   component: () => (
