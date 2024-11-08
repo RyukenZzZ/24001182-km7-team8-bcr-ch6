@@ -1,4 +1,4 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import Protected from "../../components/Auth/Protected";
 import { createType } from "../../service/type";
 import Row from "react-bootstrap/Row";
@@ -23,6 +23,7 @@ function CreateType() {
   const [characteristic, setCharacteristic] = useState("");
   const [style, setStyle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +35,7 @@ function CreateType() {
       if (result.success) {
         toast.success(result.message);
         setIsLoading(false);
+        navigate({ to: "/types" });
         return;
       }
       setIsLoading(false);
@@ -42,10 +44,6 @@ function CreateType() {
 
     createTypeData();
   };
-
-  if (isLoading) {
-    return <h2>Loading...</h2>;
-  }
 
   return (
     <Row className="mt-5">
@@ -120,7 +118,7 @@ function CreateType() {
                 </Col>
               </Form.Group>
               <div className="d-grid gap-2">
-                <Button type="submit" variant="primary">
+                <Button type="submit" variant="primary" disabled={isLoading}>
                   Create Type
                 </Button>
               </div>

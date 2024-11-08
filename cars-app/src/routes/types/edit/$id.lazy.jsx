@@ -21,6 +21,7 @@ function TypeDetail() {
   const navigate = useNavigate();
   const { id } = Route.useParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [isTypeLoading,setIsTypeLoading] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [characteristic, setCharacteristic] = useState("");
@@ -28,17 +29,17 @@ function TypeDetail() {
 
   useEffect(() => {
     const getCurrentType = async () => {
-      setIsLoading(true);
+      setIsTypeLoading(true);
       const result = await getTypesById(id);
       if (result.success) {
-        setIsLoading(false);
+        setIsTypeLoading(false);
         setName(result.data.name);
         setDescription(result.data.description);
         setCharacteristic(result.data.characteristic);
-        setStyle(result.data.option);
+        setStyle(result.data.style);
         return;
       }
-      setIsLoading(false);
+      setIsTypeLoading(false);
       toast.error(result.message);
       navigate({ to: "/types" });
     };
@@ -52,17 +53,22 @@ function TypeDetail() {
     const result = await updateType(id, body);
     if (result.success) {
       toast.success(result.message);
+      navigate({to:`/types/${id}`});
       setIsLoading(false);
       return;
     }
     toast.error(result.message);
     setIsLoading(false);
   };
+  if(isTypeLoading){
+    return (<h2>Loading...</h2>)
+  }
+
   return (
     <Row className="mt-5">
       <Col className="offset-md-3">
         <Card>
-          <Card.Header className="text-center">Edit Model</Card.Header>
+          <Card.Header className="text-center">Edit Type</Card.Header>
           <Card.Body>
             <Form onSubmit={onSubmit}>
               <Form.Group as={Row} className="mb-3" controlId="name">
@@ -114,12 +120,12 @@ function TypeDetail() {
               </Form.Group>
               <Form.Group as={Row} className="mb-3" controlId="nick_name">
                 <Form.Label column sm={3}>
-                  Option
+                  Style
                 </Form.Label>
                 <Col sm="9">
                   <Form.Control
                     type="text"
-                    placeholder="Option"
+                    placeholder="Style"
                     value={style}
                     onChange={(event) => {
                       setStyle(event.target.value);

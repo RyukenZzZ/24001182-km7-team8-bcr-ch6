@@ -1,4 +1,4 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
@@ -19,6 +19,7 @@ function TypeDetail() {
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const [type, setType] = useState("");
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   useEffect(() => {
     const getTypeData = async () => {
       setIsLoading(true);
@@ -30,9 +31,10 @@ function TypeDetail() {
       }
       toast.error(result.message);
       setIsLoading(false);
+      navigate({ to: "/types" });
     };
     getTypeData();
-  }, [id]);
+  }, [id, navigate]);
 
   const onDelete = async (e) => {
     e.preventDefault();
@@ -41,7 +43,8 @@ function TypeDetail() {
       const result = await deleteType(id);
       if (result.success) {
         toast.success(result.message);
-        isDeleteLoading(false);
+        setIsDeleteLoading(false);
+        navigate({ to: "/types" });
         return;
       }
       toast.error(
@@ -76,13 +79,11 @@ function TypeDetail() {
         <Card>
           <Card.Body>
             <Card.Title>{type?.name}</Card.Title>
-            <Card.Text>{type?.description}</Card.Text>
-            {type?.characteristic !== "undefined" && (
-              <Card.Text>{type?.characteristic}</Card.Text>
+            <Card.Text>Description : {type?.description}</Card.Text>
+            {type.characteristic && (
+              <Card.Text>Characteristic : {type?.characteristic}</Card.Text>
             )}
-            {type?.style !== "undefined" && (
-              <Card.Text>{type?.style}</Card.Text>
-            )}
+            {type.style && <Card.Text>Style : {type?.style}</Card.Text>}
             {user?.role_id == 1 && (
               <>
                 <Card.Text>
@@ -103,7 +104,7 @@ function TypeDetail() {
                       onClick={onDelete}
                       variant="danger"
                       size="md"
-                      disabled={isLoading}
+                      disabled={isDeleteLoading}
                     >
                       Delete Type
                     </Button>
