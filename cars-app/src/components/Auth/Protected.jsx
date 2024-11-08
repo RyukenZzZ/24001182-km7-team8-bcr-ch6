@@ -9,10 +9,10 @@ const Protected = ({ children, roles }) => {
         return;
     }
 
-    if (user && !roles.includes(user.role_id)) {
-        const  isCanAccess = roles.includes(user.role_id);
-        if(!isCanAccess){
-            navigate("/");
+    if (token && user && roles.length > 0) {
+        const isCanAccess = roles.includes(user?.role_id);
+        if (!isCanAccess) {
+            navigate({ to: "/" });
             return;
         }
     }
