@@ -67,6 +67,11 @@ const NavigationBar = () => {
                 Create Model
               </Nav.Link>
               )}
+              {user && user.role_id === 1 && (
+                <Nav.Link as={Link} to="/manufactures/createManufactures">
+                    Create Manufactures
+                </Nav.Link>
+              )}
             </Nav>
             <Nav>
                 {user ? (
