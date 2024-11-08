@@ -70,55 +70,73 @@ function Index() {
     );
   }
 
-  return (
-    <Row className="mt-4">
-      {error ? (
-        <Col>
-          <h1>{error}</h1>
-        </Col>
-      ) : (
-        <Col>
-          <h1>Data Selection</h1>
+ return (
+  <Row className="mt-4">
+    {error ? (
+      <Col>
+        <h1 className="text-danger">{error}</h1>
+      </Col>
+    ) : (
+      <Col>
+        <h1 className="text-primary">Data Selection</h1>
+        <div className="mb-4">
+          <button 
+            className="btn btn-outline-primary me-2" 
+            onClick={() => setSelectedData("models")}
+          >
+            Show Models
+          </button>
+          <button 
+            className="btn btn-outline-secondary" 
+            onClick={() => setSelectedData("manufactures")}
+          >
+            Show Manufactures
+          </button>
+        </div>
+
+        {selectedData === "models" && (
           <div>
-            <button onClick={() => setSelectedData("models")}>Show Models</button>
-            <button onClick={() => setSelectedData("manufactures")}>Show Manufactures</button>
+            <h2>Models</h2>
+            {models.length > 0 ? (
+              <Row>
+                {models.map((model) => (
+                  <Col key={model.id} md={4} className="mb-4">
+                    <div>
+                      <div>
+                        <ModelItem model={model} />
+                      </div>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <h2>No models found</h2>
+            )}
           </div>
+        )}
 
-          {selectedData === "models" && (
-            <div>
-              <h2>Models</h2>
-              {models.length > 0 ? (
-                <ul>
-                  {models.map((model) => (
-                    <li key={model.id}>
-                      <ModelItem model={model} />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <h2>No models found</h2>
-              )}
-            </div>
-          )}
-
-          {selectedData === "manufactures" && (
-            <div>
-              <h2>Manufactures</h2>
-              {manufactures.length > 0 ? (
-                <ul>
-                  {manufactures.map((manufacture) => (
-                    <li key={manufacture.id}>
-                      <ManufactureItem manufacture={manufacture} />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <h2>No manufactures found</h2>
-              )}
-            </div>
-          )}
-        </Col>
-      )}
-    </Row>
-  );
+        {selectedData === "manufactures" && (
+          <div>
+            <h2>Manufactures</h2>
+            {manufactures.length > 0 ? (
+              <Row>
+                {manufactures.map((manufacture) => (
+                  <Col key={manufacture.id} md={4} className="mb-4">
+                    <div>
+                      <div>
+                        <ManufactureItem manufacture={manufacture} />
+                      </div>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <h2>No manufactures found</h2>
+            )}
+          </div>
+        )}
+      </Col>
+    )}
+  </Row>
+);
 }

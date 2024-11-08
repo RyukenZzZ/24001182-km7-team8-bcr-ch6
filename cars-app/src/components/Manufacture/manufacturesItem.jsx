@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 
 const ManufactureItem = ({ manufacture }) => {
     return (
-        <Col md={3} className="mb-4">
+        <Col md={12} className="mb-4">
             <Card style={{ width: "100%", maxWidth: "18rem" }} className="h-100 shadow-sm">
                 <Card.Img
                     variant="top"
