@@ -25,8 +25,14 @@ const TypesCreateLazyImport = createFileRoute('/types/create')()
 const TypesIdLazyImport = createFileRoute('/types/$id')()
 const ModelsCreateLazyImport = createFileRoute('/models/create')()
 const ModelsIdLazyImport = createFileRoute('/models/$id')()
+const ManufacturesCreateManufacturesLazyImport = createFileRoute(
+  '/manufactures/createManufactures',
+)()
+const ManufacturesIdLazyImport = createFileRoute('/manufactures/$id')()
+const CarsIdLazyImport = createFileRoute('/cars/$id')()
 const TypesEditIdLazyImport = createFileRoute('/types/edit/$id')()
 const ModelsEditIdLazyImport = createFileRoute('/models/edit/$id')()
+const ManufacturesEditIdLazyImport = createFileRoute('/manufactures/edit/$id')()
 
 // Create/Update Routes
 
@@ -84,6 +90,31 @@ const ModelsIdLazyRoute = ModelsIdLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/models/$id.lazy').then((d) => d.Route))
 
+const ManufacturesCreateManufacturesLazyRoute =
+  ManufacturesCreateManufacturesLazyImport.update({
+    id: '/manufactures/createManufactures',
+    path: '/manufactures/createManufactures',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/manufactures/createManufactures.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const ManufacturesIdLazyRoute = ManufacturesIdLazyImport.update({
+  id: '/manufactures/$id',
+  path: '/manufactures/$id',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/manufactures/$id.lazy').then((d) => d.Route),
+)
+
+const CarsIdLazyRoute = CarsIdLazyImport.update({
+  id: '/cars/$id',
+  path: '/cars/$id',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/cars/$id.lazy').then((d) => d.Route))
+
 const TypesEditIdLazyRoute = TypesEditIdLazyImport.update({
   id: '/types/edit/$id',
   path: '/types/edit/$id',
@@ -98,6 +129,14 @@ const ModelsEditIdLazyRoute = ModelsEditIdLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/models/edit/$id.lazy').then((d) => d.Route),
+)
+
+const ManufacturesEditIdLazyRoute = ManufacturesEditIdLazyImport.update({
+  id: '/manufactures/edit/$id',
+  path: '/manufactures/edit/$id',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/manufactures/edit/$id.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -130,6 +169,27 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/cars/$id': {
+      id: '/cars/$id'
+      path: '/cars/$id'
+      fullPath: '/cars/$id'
+      preLoaderRoute: typeof CarsIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/manufactures/$id': {
+      id: '/manufactures/$id'
+      path: '/manufactures/$id'
+      fullPath: '/manufactures/$id'
+      preLoaderRoute: typeof ManufacturesIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/manufactures/createManufactures': {
+      id: '/manufactures/createManufactures'
+      path: '/manufactures/createManufactures'
+      fullPath: '/manufactures/createManufactures'
+      preLoaderRoute: typeof ManufacturesCreateManufacturesLazyImport
       parentRoute: typeof rootRoute
     }
     '/models/$id': {
@@ -167,6 +227,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TypesIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/manufactures/edit/$id': {
+      id: '/manufactures/edit/$id'
+      path: '/manufactures/edit/$id'
+      fullPath: '/manufactures/edit/$id'
+      preLoaderRoute: typeof ManufacturesEditIdLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/models/edit/$id': {
       id: '/models/edit/$id'
       path: '/models/edit/$id'
@@ -191,11 +258,15 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginLazyRoute
   '/profile': typeof ProfileLazyRoute
   '/register': typeof RegisterLazyRoute
+  '/cars/$id': typeof CarsIdLazyRoute
+  '/manufactures/$id': typeof ManufacturesIdLazyRoute
+  '/manufactures/createManufactures': typeof ManufacturesCreateManufacturesLazyRoute
   '/models/$id': typeof ModelsIdLazyRoute
   '/models/create': typeof ModelsCreateLazyRoute
   '/types/$id': typeof TypesIdLazyRoute
   '/types/create': typeof TypesCreateLazyRoute
   '/types': typeof TypesIndexLazyRoute
+  '/manufactures/edit/$id': typeof ManufacturesEditIdLazyRoute
   '/models/edit/$id': typeof ModelsEditIdLazyRoute
   '/types/edit/$id': typeof TypesEditIdLazyRoute
 }
@@ -205,11 +276,15 @@ export interface FileRoutesByTo {
   '/login': typeof LoginLazyRoute
   '/profile': typeof ProfileLazyRoute
   '/register': typeof RegisterLazyRoute
+  '/cars/$id': typeof CarsIdLazyRoute
+  '/manufactures/$id': typeof ManufacturesIdLazyRoute
+  '/manufactures/createManufactures': typeof ManufacturesCreateManufacturesLazyRoute
   '/models/$id': typeof ModelsIdLazyRoute
   '/models/create': typeof ModelsCreateLazyRoute
   '/types/$id': typeof TypesIdLazyRoute
   '/types/create': typeof TypesCreateLazyRoute
   '/types': typeof TypesIndexLazyRoute
+  '/manufactures/edit/$id': typeof ManufacturesEditIdLazyRoute
   '/models/edit/$id': typeof ModelsEditIdLazyRoute
   '/types/edit/$id': typeof TypesEditIdLazyRoute
 }
@@ -220,11 +295,15 @@ export interface FileRoutesById {
   '/login': typeof LoginLazyRoute
   '/profile': typeof ProfileLazyRoute
   '/register': typeof RegisterLazyRoute
+  '/cars/$id': typeof CarsIdLazyRoute
+  '/manufactures/$id': typeof ManufacturesIdLazyRoute
+  '/manufactures/createManufactures': typeof ManufacturesCreateManufacturesLazyRoute
   '/models/$id': typeof ModelsIdLazyRoute
   '/models/create': typeof ModelsCreateLazyRoute
   '/types/$id': typeof TypesIdLazyRoute
   '/types/create': typeof TypesCreateLazyRoute
   '/types/': typeof TypesIndexLazyRoute
+  '/manufactures/edit/$id': typeof ManufacturesEditIdLazyRoute
   '/models/edit/$id': typeof ModelsEditIdLazyRoute
   '/types/edit/$id': typeof TypesEditIdLazyRoute
 }
@@ -236,11 +315,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/register'
+    | '/cars/$id'
+    | '/manufactures/$id'
+    | '/manufactures/createManufactures'
     | '/models/$id'
     | '/models/create'
     | '/types/$id'
     | '/types/create'
     | '/types'
+    | '/manufactures/edit/$id'
     | '/models/edit/$id'
     | '/types/edit/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -249,11 +332,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/register'
+    | '/cars/$id'
+    | '/manufactures/$id'
+    | '/manufactures/createManufactures'
     | '/models/$id'
     | '/models/create'
     | '/types/$id'
     | '/types/create'
     | '/types'
+    | '/manufactures/edit/$id'
     | '/models/edit/$id'
     | '/types/edit/$id'
   id:
@@ -262,11 +349,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/register'
+    | '/cars/$id'
+    | '/manufactures/$id'
+    | '/manufactures/createManufactures'
     | '/models/$id'
     | '/models/create'
     | '/types/$id'
     | '/types/create'
     | '/types/'
+    | '/manufactures/edit/$id'
     | '/models/edit/$id'
     | '/types/edit/$id'
   fileRoutesById: FileRoutesById
@@ -277,11 +368,15 @@ export interface RootRouteChildren {
   LoginLazyRoute: typeof LoginLazyRoute
   ProfileLazyRoute: typeof ProfileLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
+  CarsIdLazyRoute: typeof CarsIdLazyRoute
+  ManufacturesIdLazyRoute: typeof ManufacturesIdLazyRoute
+  ManufacturesCreateManufacturesLazyRoute: typeof ManufacturesCreateManufacturesLazyRoute
   ModelsIdLazyRoute: typeof ModelsIdLazyRoute
   ModelsCreateLazyRoute: typeof ModelsCreateLazyRoute
   TypesIdLazyRoute: typeof TypesIdLazyRoute
   TypesCreateLazyRoute: typeof TypesCreateLazyRoute
   TypesIndexLazyRoute: typeof TypesIndexLazyRoute
+  ManufacturesEditIdLazyRoute: typeof ManufacturesEditIdLazyRoute
   ModelsEditIdLazyRoute: typeof ModelsEditIdLazyRoute
   TypesEditIdLazyRoute: typeof TypesEditIdLazyRoute
 }
@@ -291,11 +386,16 @@ const rootRouteChildren: RootRouteChildren = {
   LoginLazyRoute: LoginLazyRoute,
   ProfileLazyRoute: ProfileLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
+  CarsIdLazyRoute: CarsIdLazyRoute,
+  ManufacturesIdLazyRoute: ManufacturesIdLazyRoute,
+  ManufacturesCreateManufacturesLazyRoute:
+    ManufacturesCreateManufacturesLazyRoute,
   ModelsIdLazyRoute: ModelsIdLazyRoute,
   ModelsCreateLazyRoute: ModelsCreateLazyRoute,
   TypesIdLazyRoute: TypesIdLazyRoute,
   TypesCreateLazyRoute: TypesCreateLazyRoute,
   TypesIndexLazyRoute: TypesIndexLazyRoute,
+  ManufacturesEditIdLazyRoute: ManufacturesEditIdLazyRoute,
   ModelsEditIdLazyRoute: ModelsEditIdLazyRoute,
   TypesEditIdLazyRoute: TypesEditIdLazyRoute,
 }
@@ -314,11 +414,15 @@ export const routeTree = rootRoute
         "/login",
         "/profile",
         "/register",
+        "/cars/$id",
+        "/manufactures/$id",
+        "/manufactures/createManufactures",
         "/models/$id",
         "/models/create",
         "/types/$id",
         "/types/create",
         "/types/",
+        "/manufactures/edit/$id",
         "/models/edit/$id",
         "/types/edit/$id"
       ]
@@ -335,6 +439,15 @@ export const routeTree = rootRoute
     "/register": {
       "filePath": "register.lazy.jsx"
     },
+    "/cars/$id": {
+      "filePath": "cars/$id.lazy.jsx"
+    },
+    "/manufactures/$id": {
+      "filePath": "manufactures/$id.lazy.jsx"
+    },
+    "/manufactures/createManufactures": {
+      "filePath": "manufactures/createManufactures.lazy.jsx"
+    },
     "/models/$id": {
       "filePath": "models/$id.lazy.jsx"
     },
@@ -349,6 +462,9 @@ export const routeTree = rootRoute
     },
     "/types/": {
       "filePath": "types/index.lazy.jsx"
+    },
+    "/manufactures/edit/$id": {
+      "filePath": "manufactures/edit/$id.lazy.jsx"
     },
     "/models/edit/$id": {
       "filePath": "models/edit/$id.lazy.jsx"

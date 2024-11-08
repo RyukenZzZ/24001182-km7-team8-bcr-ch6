@@ -1,23 +1,21 @@
-import { useSelector } from "react-redux";
 import { useNavigate } from "@tanstack/react-router";
+import { useSelector } from "react-redux";
 
 const Protected = ({ children, roles }) => {
-  const { user, token } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
-
-  if (!token) {
-    navigate({ to: "/login" });
-    return;
-  }
-
-  if (token && user && roles.length) {
-    if (!roles.includes(user.role_id)) {
-      navigate({ to: "/" });
-      return;
+    const navigate = useNavigate();
+    const { token, user } = useSelector((state) => state.auth);
+    if (!token) {
+        navigate("/login");
+        return;
     }
-  }
-
-  return children;
+  
+    if (token && user && roles.length > 0) {
+        const isCanAccess = roles.includes(user?.role_id);
+        if (!isCanAccess) {
+            navigate({ to: "/" });
+            return;
+        }
+    }
+    return children;
 };
-
 export default Protected;

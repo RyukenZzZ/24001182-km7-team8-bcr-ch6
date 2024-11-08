@@ -5,13 +5,13 @@ import propTypes from "prop-types";
 import { Link } from "@tanstack/react-router";
 const CarType = ({ type }) => {
   return (
-    <Col md={4}>
-      <Card>
+    <Col md={3}>
+      <Card style={{ width: "18rem" }}>
         <Card.Body>
           <Card.Title>{type.name}</Card.Title>
           <Card.Text>{type.description}</Card.Text>
           <Button as={Link} href={`/types/${type.id}`} variant="primary">
-            Detail
+            Detail Type
           </Button>
         </Card.Body>
       </Card>

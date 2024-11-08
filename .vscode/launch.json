@@ -10,6 +10,17 @@
             "type": "chrome",
             "url": "http://localhost:5173/",
             "webRoot": "${workspaceFolder}/cars-app"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Kel 8 models",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/backend-ch6",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"] 
         }
     ]
 }

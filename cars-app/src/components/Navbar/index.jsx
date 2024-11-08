@@ -54,7 +54,7 @@ const NavigationBar = () => {
         <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
         <Container>
           <Navbar.Brand as={Link} to="/">
-            Model Wakanda App
+             Wakanda App
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
@@ -66,6 +66,16 @@ const NavigationBar = () => {
                 <Nav.Link as={Link} to="/models/create">
                 Create Model
               </Nav.Link>
+              )}
+              {user && user.role_id === 1 && (
+                <Nav.Link as={Link} to="/manufactures/createManufactures">
+                    Create Manufactures
+                </Nav.Link>
+              )}
+              {user && user.role_id === 1 && (
+                <Nav.Link as={Link} to="/types/create">
+                    Create Types
+                </Nav.Link>
               )}
             </Nav>
             <Nav>
