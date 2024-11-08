@@ -95,7 +95,7 @@ function ModelDetail() {
           <Card.Body>
             <Card.Title>{model?.name}</Card.Title>
             <Card.Text>{model?.description}</Card.Text>
-            <Card.Text>{model?.manufactures?.manufacture}</Card.Text>
+            <Card.Text>{model?.manufactures?.name}</Card.Text>
 
             {user?.role_id === 1 && (
               <>
