@@ -12,7 +12,7 @@ import Protected from "../../../components/Auth/Protected";
 
 export const Route = createLazyFileRoute("/models/edit/$id")({
     component: () => (
-        <Protected roles = {[1]}>
+        <Protected roles={[1]}>
             <EditModel />
         </Protected>
     ),
@@ -33,7 +33,7 @@ function EditModel() {
         const getManufacturesData = async () => {
             const result = await getManufactures();
             if (result?.success) {
-                setManufactures(result?.data);
+                setManufactures(result.data); // Pastikan bahwa result.data adalah array
             }
         };
 
@@ -62,7 +62,7 @@ function EditModel() {
 
     if (isNotFound) {
         navigate({ to: "/" });
-        return;
+        return null;
     }
 
     const onSubmit = async (event) => {
@@ -86,65 +86,42 @@ function EditModel() {
         <Row className="mt-5">
             <Col className="offset-md-3">
                 <Card>
-                    <Card.Header className="text-center">
-                        Edit Model
-                    </Card.Header>
+                    <Card.Header className="text-center">Edit Model</Card.Header>
                     <Card.Body>
                         <Form onSubmit={onSubmit}>
-                            <Form.Group
-                                as={Row}
-                                className="mb-3"
-                                controlId="name"
-                            >
-                                <Form.Label column sm={3}>
-                                    Name
-                                </Form.Label>
+                            <Form.Group as={Row} className="mb-3" controlId="name">
+                                <Form.Label column sm={3}>Name</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
                                         type="text"
                                         placeholder="Name"
                                         required
                                         value={name}
-                                        onChange={(event) => {
-                                            setName(event.target.value);
-                                        }}
+                                        onChange={(event) => setName(event.target.value)}
                                     />
                                 </Col>
                             </Form.Group>
-                            <Form.Group
-                                as={Row}
-                                className="mb-3"
-                                controlId="nick_name"
-                            >
-                                <Form.Label column sm={3}>
-                                    Description
-                                </Form.Label>
+                            <Form.Group as={Row} className="mb-3" controlId="description">
+                                <Form.Label column sm={3}>Description</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
                                         type="text"
-                                        placeholder="Nick Name"
+                                        placeholder="Description"
                                         required
                                         value={description}
-                                        onChange={(event) => {
-                                            setDescription(event.target.value);
-                                        }}
+                                        onChange={(event) => setDescription(event.target.value)}
                                     />
                                 </Col>
                             </Form.Group>
-                            <Form.Group
-                                as={Row}
-                                className="mb-3"
-                                controlId="nick_name"
-                            >
-                                <Form.Label column sm={3}>
-                                    Manufacture
-                                </Form.Label>
+                            <Form.Group as={Row} className="mb-3" controlId="manufacture">
+                                <Form.Label column sm={3}>Manufacture</Form.Label>
                                 <Col sm="9">
-                                    <Form.Select aria-label="Default select example" 
-                                    onChange={(event) => {
-                                        setManufactures(event.target.value)
-                                    }}>
-                                        <option disabled>
+                                    <Form.Select
+                                        aria-label="Default select example"
+                                        value={manufactureId}
+                                        onChange={(event) => setManufactureId(event.target.value)}
+                                    >
+                                        <option disabled value="">
                                             Select Manufacture
                                         </option>
                                         {!isLoading &&
@@ -153,10 +130,6 @@ function EditModel() {
                                                 <option
                                                     key={manufacture.id}
                                                     value={manufacture.id}
-                                                    selected={
-                                                        manufacture.id ==
-                                                        manufactureId
-                                                    }
                                                 >
                                                     {manufacture.name}
                                                 </option>
