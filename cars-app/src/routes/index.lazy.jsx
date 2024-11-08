@@ -43,7 +43,7 @@ function Index() {
           setError(manufactureResult.message || "Failed to fetch manufactures");
         }
       } catch (err) {
-        setError("An error occurred while fetching data");
+        setError(err);
       } finally {
         setIsLoading(false);
       }
