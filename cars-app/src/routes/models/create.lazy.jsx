@@ -8,9 +8,14 @@ import Button from 'react-bootstrap/Button'
 import { getManufactures } from '../../service/manufacture'
 import { createModel } from '../../service/model'
 import { toast } from 'react-toastify'
+import Protected from '../../components/Auth/Protected'
 
 export const Route = createLazyFileRoute('/models/create')({
-  component: CreateModel,
+  component: () => (
+    <Protected roles = {[1]}>
+        <CreateModel />
+    </Protected>
+),
 })
 
 function CreateModel() {

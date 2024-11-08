@@ -8,9 +8,14 @@ import Button from "react-bootstrap/Button";
 import { getManufactures } from "../../../service/manufacture";
 import { getDetailModel, updateModel } from "../../../service/model";
 import { toast } from "react-toastify";
+import Protected from "../../../components/Auth/Protected";
 
 export const Route = createLazyFileRoute("/models/edit/$id")({
-    component: EditModel,
+    component: () => (
+        <Protected roles = {[1]}>
+            <EditModel />
+        </Protected>
+    ),
 });
 
 function EditModel() {
