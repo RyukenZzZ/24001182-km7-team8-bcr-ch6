@@ -71,14 +71,10 @@ export const createCar = async (request) => {
   formData.append("year", request.year);
 
   if (request.options) {
-    for (const option of request.options) {
-      formData.append("options[]", option);
-    }
+    formData.append("options", request.options);
   }
   if (request.specs) {
-    for (const spec of request.specs) {
-      formData.append("specs[]", spec);
-    }
+    formData.append("specs", request.specs);
   }
 
   const response = await fetch(`${import.meta.env.VITE_API_URL}/cars`, {
@@ -89,16 +85,8 @@ export const createCar = async (request) => {
     body: formData,
   });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to create car");
-  }
-
   const result = await response.json();
-  return {
-    success: true,
-    data: result,
-  };
+  return result;
 };
 
 export const updateCar = async (id, request) => {

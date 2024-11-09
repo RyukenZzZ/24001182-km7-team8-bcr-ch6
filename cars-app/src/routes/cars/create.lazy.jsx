@@ -1,18 +1,19 @@
-import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { getManufactures } from '../../service/manufacture';
-import { getModels } from '../../service/model';
-// import { getTypes } from '../../service/type';
-import { createCar } from '../../service/car';
-import { toast } from 'react-toastify';
-import Protected from '../../components/Auth/Protected';
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Image from "react-bootstrap/esm/Image";
+import { getManufactures } from "../../service/manufacture";
+import { getModels } from "../../service/model";
+import { getTypes } from "../../service/type";
+import { createCar } from "../../service/car";
+import { toast } from "react-toastify";
+import Protected from "../../components/Auth/Protected";
 
-export const Route = createLazyFileRoute('/cars/create')({
+export const Route = createLazyFileRoute("/cars/create")({
   component: () => (
     <Protected roles={[1]}>
       <CreateCar />
@@ -23,16 +24,19 @@ export const Route = createLazyFileRoute('/cars/create')({
 function CreateCar() {
   const navigate = useNavigate();
 
+  const [available, setAvailable] = useState(false);
   const [plate, setPlate] = useState("");
   const [models, setModels] = useState([]);
   const [modelId, setModelId] = useState(0);
   const [rentPerDay, setRentPerDay] = useState("");
   const [capacity, setCapacity] = useState("");
+  const [image, setImage] = useState(undefined);
+  const [currentImage, setCurrentImage] = useState(undefined);
   const [description, setDescription] = useState("");
   const [availableAt, setAvailableAt] = useState("");
   const [transmission, setTransmission] = useState("");
-//   const [types, setTypes] = useState([]);
-//   const [typeId, setTypeId] = useState(0);
+  const [types, setTypes] = useState([]);
+  const [typeId, setTypeId] = useState(0);
   const [manufactures, setManufactures] = useState([]);
   const [manufactureId, setManufactureId] = useState(0);
   const [year, setYear] = useState("");
@@ -48,12 +52,20 @@ function CreateCar() {
     };
 
     const getModelsData = async () => {
-        const result = await getModels();
-        if (result?.success) {
-          setModels(result?.data);
-        }
-      };
+      const result = await getModels();
+      if (result?.success) {
+        setModels(result?.data);
+      }
+    };
 
+    const getTypesData = async () => {
+      const result = await getTypes();
+      if (result?.success) {
+        setTypes(result?.data);
+      }
+    };
+
+    getTypesData();
     getModelsData();
     getManufacturesData();
   }, []);
@@ -86,10 +98,12 @@ function CreateCar() {
       modelId,
       rentPerDay,
       capacity,
+      image,
       description,
       availableAt,
+      available,
       transmission,
-    //   typeId,
+      typeId,
       manufactureId,
       year,
       options,
@@ -98,7 +112,7 @@ function CreateCar() {
 
     const result = await createCar(request);
     if (result?.success) {
-      navigate({ to: '/' });
+      navigate({ to: "/" });
       return;
     }
 
@@ -107,49 +121,27 @@ function CreateCar() {
 
   return (
     <Row className="mt-5">
-    <Col className="offset-md-3">
-      <Card>
-        <Card.Header className="text-center">Create Car</Card.Header>
-        <Card.Body>
-          <Form onSubmit={onSubmit}>
-            <Form.Group as={Row} className="mb-3" controlId="plate">
-              <Form.Label column sm={3}>
-                Plate
-              </Form.Label>
-              <Col sm="9">
-                <Form.Control
-                  type="text"
-                  placeholder="Plate Number"
-                  required
-                  value={plate}
-                  onChange={(e) => setPlate(e.target.value)}
-                />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3" controlId="model_id">
+      <Col className="offset-md-3">
+        <Card>
+          <Card.Header className="text-center">Create Car</Card.Header>
+          <Card.Body>
+            <Form onSubmit={onSubmit}>
+              <Form.Group as={Row} className="mb-3" controlId="plate">
                 <Form.Label column sm={3}>
-                  Model
+                  Plate
                 </Form.Label>
                 <Col sm="9">
-                  <Form.Select
-                    aria-label="Default select example"
-                    onChange={(event) => setModelId(event.target.value)}
-                  >
-                    <option disabled selected>
-                      Select Model
-                    </option>
-                    {models.length > 0 &&
-                      models.map((model) => (
-                        <option key={model?.id} value={model?.id}>
-                          {model?.name}
-                        </option>
-                      ))}
-                  </Form.Select>
+                  <Form.Control
+                    type="text"
+                    placeholder="Plate Number"
+                    required
+                    value={plate}
+                    onChange={(e) => setPlate(e.target.value)}
+                  />
                 </Col>
               </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="manufacture_id">
+              <Form.Group as={Row} className="mb-3" controlId="manufacture_id">
                 <Form.Label column sm={3}>
                   Manufacture
                 </Form.Label>
@@ -171,8 +163,46 @@ function CreateCar() {
                 </Col>
               </Form.Group>
 
+              <Form.Group as={Row} className="mb-3" controlId="model_id">
+                <Form.Label column sm={3}>
+                  Model
+                </Form.Label>
+                <Col sm="9">
+                  <Form.Select
+                    aria-label="Default select example"
+                    onChange={(event) => setModelId(event.target.value)}
+                  >
+                    <option disabled selected>
+                      Select Model
+                    </option>
+                    {models.length > 0 &&
+                      models.map((model) => (
+                        <option key={model?.id} value={model?.id}>
+                          {model?.name}
+                        </option>
+                      ))}
+                  </Form.Select>
+                </Col>
+              </Form.Group>
+
+              <Form.Group as={Row} className="mb-3" controlId="rentPerDay">
+                <Form.Label column sm={3}>
+                  Rent per Day
+                </Form.Label>
+                <Col sm="9">
+                  <Form.Control
+                    type="number"
+                    placeholder="Rent per Day"
+                    value={rentPerDay}
+                    onChange={(e) => setRentPerDay(e.target.value)}
+                  />
+                </Col>
+              </Form.Group>
+
               <Form.Group as={Row} className="mb-3" controlId="availableAt">
-                <Form.Label column sm={3}>Available At</Form.Label>
+                <Form.Label column sm={3}>
+                  Available At
+                </Form.Label>
                 <Col sm="9">
                   <Form.Control
                     type="date"
@@ -182,63 +212,49 @@ function CreateCar() {
                 </Col>
               </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="rentPerDay">
-              <Form.Label column sm={3}>
-                Rent per Day
-              </Form.Label>
-              <Col sm="9">
-                <Form.Control
-                  type="number"
-                  placeholder="Rent per Day"
-                  value={rentPerDay}
-                  onChange={(e) => setRentPerDay(e.target.value)}
-                />
-              </Col>
-            </Form.Group>
+              <Form.Group as={Row} className="mb-3" controlId="capacity">
+                <Form.Label column sm={3}>
+                  Capacity
+                </Form.Label>
+                <Col sm="9">
+                  <Form.Control
+                    type="number"
+                    placeholder="Capacity"
+                    value={capacity}
+                    onChange={(e) => setCapacity(e.target.value)}
+                  />
+                </Col>
+              </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="capacity">
-              <Form.Label column sm={3}>
-                Capacity
-              </Form.Label>
-              <Col sm="9">
-                <Form.Control
-                  type="number"
-                  placeholder="Capacity"
-                  value={capacity}
-                  onChange={(e) => setCapacity(e.target.value)}
-                />
-              </Col>
-            </Form.Group>
+              <Form.Group as={Row} className="mb-3" controlId="description">
+                <Form.Label column sm={3}>
+                  Description
+                </Form.Label>
+                <Col sm="9">
+                  <Form.Control
+                    type="text"
+                    placeholder="input Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </Col>
+              </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="description">
-              <Form.Label column sm={3}>
-                Description
-              </Form.Label>
-              <Col sm="9">
-                <Form.Control
-                  type="text"
-                  placeholder="input Description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </Col>
-            </Form.Group>
+              <Form.Group as={Row} className="mb-3" controlId="transmission">
+                <Form.Label column sm={3}>
+                  Transmission
+                </Form.Label>
+                <Col sm="9">
+                  <Form.Control
+                    type="text"
+                    placeholder="Transmission Type"
+                    value={transmission}
+                    onChange={(e) => setTransmission(e.target.value)}
+                  />
+                </Col>
+              </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="transmission">
-              <Form.Label column sm={3}>
-                Transmission
-              </Form.Label>
-              <Col sm="9">
-                <Form.Control
-                  type="text"
-                  placeholder="Transmission Type"
-                  value={transmission}
-                  onChange={(e) => setTransmission(e.target.value)}
-                />
-              </Col>
-            </Form.Group>
-
-            {/* <Form.Group as={Row} className="mb-3" controlId="type_id">
+              <Form.Group as={Row} className="mb-3" controlId="type_id">
                 <Form.Label column sm={3}>
                   Type
                 </Form.Label>
@@ -258,24 +274,41 @@ function CreateCar() {
                       ))}
                   </Form.Select>
                 </Col>
-              </Form.Group> */}
+              </Form.Group>
 
-            <Form.Group as={Row} className="mb-3" controlId="year">
-              <Form.Label column sm={3}>
-                Year
-              </Form.Label>
-              <Col sm="9">
-                <Form.Control
-                  type="number"
-                  placeholder="Year"
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                />
-              </Col>
-            </Form.Group>
+              <Form.Group as={Row} className="mb-3" controlId="year">
+                <Form.Label column sm={3}>
+                  Year
+                </Form.Label>
+                <Col sm="9">
+                  <Form.Control
+                    type="number"
+                    placeholder="Year"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                  />
+                </Col>
+              </Form.Group>
+
+              <Form.Group as={Row} className="mb-3" controlId="available">
+                <Form.Label column sm={3}>
+                  Available
+                </Form.Label>{" "}
+                <Col sm={9}>
+                  <Form.Check
+                    type="switch"
+                    id="available-switch"
+                    checked={available}
+                    label="Yes"
+                    onChange={(event) => setAvailable(event.target.checked)}
+                  />
+                </Col>
+              </Form.Group>
 
               <Form.Group as={Row} className="mb-3" controlId="options">
-                <Form.Label column sm={3}>Options</Form.Label>
+                <Form.Label column sm={3}>
+                  Options
+                </Form.Label>
                 <Col sm="9">
                   {options.map((option, index) => (
                     <div key={index} className="mb-2">
@@ -283,7 +316,9 @@ function CreateCar() {
                         type="text"
                         placeholder={`Option ${index + 1}`}
                         value={option}
-                        onChange={(e) => handleOptionChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleOptionChange(index, e.target.value)
+                        }
                       />
                     </div>
                   ))}
@@ -294,7 +329,9 @@ function CreateCar() {
               </Form.Group>
 
               <Form.Group as={Row} className="mb-3" controlId="specs">
-                <Form.Label column sm={3}>Specifications</Form.Label>
+                <Form.Label column sm={3}>
+                  Specifications
+                </Form.Label>
                 <Col sm="9">
                   {specs.map((spec, index) => (
                     <div key={index} className="mb-2">
@@ -302,13 +339,40 @@ function CreateCar() {
                         type="text"
                         placeholder={`Specification ${index + 1}`}
                         value={spec}
-                        onChange={(e) => handleSpecChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleSpecChange(index, e.target.value)
+                        }
                       />
                     </div>
                   ))}
                   <Button variant="secondary" onClick={handleAddSpec}>
                     Add Specification
                   </Button>
+                </Col>
+              </Form.Group>
+              <Form.Group as={Row} className="mb-3" controlId="logo">
+                <Form.Label column sm={3}>
+                  Image
+                </Form.Label>
+                <Col sm={9}>
+                  <Form.Control
+                    type="file"
+                    placeholder="Choose File"
+                    onChange={(event) => {
+                      setImage(event.target.files[0]);
+                      setCurrentImage(
+                        URL.createObjectURL(event.target.files[0])
+                      );
+                    }}
+                    accept=".jpg,.png"
+                  />
+                </Col>
+              </Form.Group>
+
+              <Form.Group as={Row} className="mb-3" controlId="currentLogo">
+                <Form.Label column sm={3}></Form.Label>
+                <Col sm={9}>
+                  <Image src={currentImage} fluid />
                 </Col>
               </Form.Group>
 
