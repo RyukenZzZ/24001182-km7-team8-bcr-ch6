@@ -114,7 +114,7 @@ function CarDetail() {
                             <strong>Description:</strong> {car?.description || "N/A"}
                         </Card.Text>
                         <Card.Text>
-                            <strong>Type:</strong> {car?.type?.description || "N/A"}
+                            <strong>Type:</strong> {car?.types?.name || "N/A"}
                         </Card.Text>
                         <Card.Text>
                             <strong>Rent per Day:</strong> ${car?.rentPerDay || "N/A"}
@@ -127,9 +127,6 @@ function CarDetail() {
                         </Card.Text>
                         <Card.Text>
                             <strong>Transmission:</strong> {car?.transmission || "N/A"}
-                        </Card.Text>
-                        <Card.Text>
-                            <strong>Year:</strong> {car?.year || "N/A"}
                         </Card.Text>
                         <Card.Text>
                             <strong>Specs:</strong> {car?.specs.join(", ") || "N/A"}
