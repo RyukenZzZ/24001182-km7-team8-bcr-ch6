@@ -93,9 +93,9 @@ function ModelDetail() {
       <Col className="offset-md-3">
         <Card>
           <Card.Body>
-            <Card.Title>{model?.name}</Card.Title>
-            <Card.Text>{model?.description}</Card.Text>
-            <Card.Text>{model?.manufactures?.name}</Card.Text>
+            <Card.Title>Name: {model?.name}</Card.Title>
+            <Card.Text>Description: {model?.description}</Card.Text>
+            <Card.Text>Manufacture: {model?.manufactures?.name}</Card.Text>
 
             {user?.role_id === 1 && (
               <>
