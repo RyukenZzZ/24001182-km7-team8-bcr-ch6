@@ -389,5 +389,3 @@ function CreateCar() {
     </Row>
   );
 }
-
-export default CreateCar;
