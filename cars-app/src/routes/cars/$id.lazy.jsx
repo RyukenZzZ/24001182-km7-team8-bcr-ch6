@@ -114,7 +114,28 @@ function CarDetail() {
                             <strong>Description:</strong> {car?.description || "N/A"}
                         </Card.Text>
                         <Card.Text>
+                            <strong>Type:</strong> {car?.type?.description || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
                             <strong>Rent per Day:</strong> ${car?.rentPerDay || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>Capacity:</strong> {car?.capacity || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>Manufacture:</strong> {car?.manufactures.name || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>Transmission:</strong> {car?.transmission || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>Year:</strong> {car?.year || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>Specs:</strong> {car?.specs.join(", ") || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
+                            <strong>Options:</strong> {car?.options.join(", ") || "N/A"}
                         </Card.Text>
 
                         {user?.role_id === 1 && (

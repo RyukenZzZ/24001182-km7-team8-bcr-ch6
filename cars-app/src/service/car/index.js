@@ -121,10 +121,10 @@ export const updateCar = async (id, request) => {
   formData.append("year", request.year);
 
   if (request.options) {
-    request.options.forEach((option) => formData.append("options[]", option));
+    formData.append("options", request.options);
   }
   if (request.specs) {
-    request.specs.forEach((spec) => formData.append("specs[]", spec));
+    formData.append("specs", request.specs);
   }
   const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${id}`, {
     headers: {
