@@ -114,6 +114,9 @@ function CarDetail() {
                             <strong>Description:</strong> {car?.description || "N/A"}
                         </Card.Text>
                         <Card.Text>
+                            <strong>Type:</strong> {car?.type || "N/A"}
+                        </Card.Text>
+                        <Card.Text>
                             <strong>Rent per Day:</strong> ${car?.rentPerDay || "N/A"}
                         </Card.Text>
 
