@@ -103,7 +103,7 @@ function CarDetail() {
                         style={{ height: "300px", objectFit: "cover" }}
                     />
                     <Card.Body>
-                        <Card.Title>{car?.plate || "Unknown Plate"}</Card.Title>
+                        <Card.Title className="border-bottom pb-2 border-secondary">{car?.plate || "Unknown Plate"}</Card.Title>
                         <Card.Text>
                             <strong>Model:</strong> {car?.models?.description || "N/A"}
                         </Card.Text>
@@ -132,10 +132,10 @@ function CarDetail() {
                             <strong>Year:</strong> {car?.year || "N/A"}
                         </Card.Text>
                         <Card.Text>
-                            <strong>Specs:</strong> {car?.specs.join(", ") || "N/A"}
+                            <strong>Specs:</strong> {car?.specs.map(spec=>(<span key={spec} className="mx-2 px-2 py-1 bg-success rounded text-white">{spec}</span>)) || "N/A"}
                         </Card.Text>
                         <Card.Text>
-                            <strong>Options:</strong> {car?.options.join(", ") || "N/A"}
+                            <strong>Options:</strong> {car?.options.map(option=>(<span key={option} className="mx-2 px-2 py-1 bg-success rounded text-white">{option}</span>)) || "N/A"}
                         </Card.Text>
 
                         {user?.role_id === 1 && (
